@@ -75,6 +75,15 @@ class TicketTypeFactory(DjangoModelFactory):
     public = True
 
 
+@register
+class TicketFactory(DjangoModelFactory):
+    class Meta:
+        model = models.Ticket
+
+    type = factory.SubFactory(TicketTypeFactory)
+    owner = factory.SubFactory(UserFactory)
+
+
 @pytest.fixture
 def user_client(client, user):
     client.force_login(user)
