@@ -1,3 +1,5 @@
 from django.contrib import admin
+from . import models as m
 
-# Register your models here.
+for model in (m.Wearable, m.TicketType, m.Ticket):
+    admin.site.register(model)
