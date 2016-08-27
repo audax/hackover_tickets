@@ -65,6 +65,16 @@ class OrderRelationFactory(DjangoModelFactory):
     order = factory.SubFactory(MerchandiseOrderFactory)
 
 
+@register
+class TicketTypeFactory(DjangoModelFactory):
+    class Meta:
+        model = models.TicketType
+
+    name = factory.Faker('catch_phrase')
+    price = factory.Faker('pydecimal', positive=True)
+    public = True
+
+
 @pytest.fixture
 def user_client(client, user):
     client.force_login(user)

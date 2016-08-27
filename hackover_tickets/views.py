@@ -1,7 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
+from . import models as m
+from .forms import TicketForm
 
 
 @login_required
 def index(request):
     return render(request, 'index.html')
+
+
+@login_required
+def ticket_order(request):
+    if request.method == 'POST':
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            m.Ticket.objects.create(type=form.cleaned_data['ticket_type'], owner=request.user)
+            return redirect(reverse('index'))
+    else:
+        form = TicketForm
+    return render(request, 'tickets/order.html',
+                  context={'form': form})
+
