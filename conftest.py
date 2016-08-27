@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth import models
 from django.utils import timezone
 from hackover_tickets import models
+from django_webtest import DjangoTestApp, WebTestMixin
 
 
 def _get_tzinfo():
@@ -89,4 +90,17 @@ def user_client(client, user):
     client.force_login(user)
     return client
 
+
+@pytest.fixture(scope='function')
+def webtest(request):
+    wtm = WebTestMixin()
+    wtm._patch_settings()
+    request.addfinalizer(wtm._unpatch_settings)
+    return DjangoTestApp()
+
+
+@pytest.fixture(scope='function')
+def webuser(webtest, user):
+    webtest.set_user(user)
+    return webtest
 
