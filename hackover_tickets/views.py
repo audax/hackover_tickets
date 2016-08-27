@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_safe
 from . import models as m
-from .forms import TicketForm
+from .forms import TicketForm, MerchOrderFormSet
 
 
 @login_required
@@ -18,7 +18,7 @@ def ticket_order(request):
             ticket = m.Ticket.objects.create(type=form.cleaned_data['ticket_type'], owner=request.user)
             return render(request, 'tickets/order_success.html', context={'ticket': ticket})
     else:
-        form = TicketForm
+        form = TicketForm()
     return render(request, 'tickets/order.html',
                   context={'form': form})
 
@@ -28,3 +28,11 @@ def ticket_order(request):
 def ticket_list(request):
     return render(request, 'tickets/list.html',
                   context={'tickets': m.Ticket.objects.filter(owner=request.user)})
+
+
+@login_required
+def merch_order(request):
+    items = m.Merchandise.objects.all()
+    formset = MerchOrderFormSet(initial=[{'name': item.name, 'price': item.price} for item in items])
+    return render(request, 'merchandise/order.html',
+                  context={'form': formset})

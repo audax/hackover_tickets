@@ -49,3 +49,12 @@ def test_list_tickets(user_client, user, ticket_factory):
     assert _("unpaid") in content
     assert _("ticket not accessed") in content
     assert _("accessed ticket") not in content
+
+
+@pytest.mark.django_db
+def test_order_merchandise_list(user_client, merchandise_factory):
+    merch = [merchandise_factory() for _ in range(5)]
+    response = user_client.get(reverse('merch_order'))
+    content = response.content.decode('utf-8')
+    for item in merch:
+        assert item.name in content

@@ -10,3 +10,13 @@ class TicketTypeField(forms.ModelChoiceField):
 
 class TicketForm(forms.Form):
     ticket_type = TicketTypeField(queryset=m.TicketType.objects.filter(public=True))
+
+
+class MerchForm(forms.Form):
+
+    name = forms.CharField(disabled=False)
+    price = forms.DecimalField(disabled=False)
+    amount = forms.IntegerField(initial=0)
+
+
+MerchOrderFormSet = forms.formset_factory(MerchForm)
