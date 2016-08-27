@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.mark.django_db
-def test_wearable(wearable):
+def test_wearable_defaults(wearable):
     assert wearable.price > 0
     assert wearable.name
 
