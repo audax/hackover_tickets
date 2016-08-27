@@ -1,0 +1,26 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HACKOVER 2015 - Sign Up</title>
+    {% load staticfiles %}
+</head>
+<body>
+<nav class="pure-menu pure-menu-open pure-menu-horizontal">
+    <ul>
+        <li><a href="http://hackover.de">Hackover</a></li>
+        <li><a href="http://hackover.de/faq">FAQ</a></li>
+    </ul>
+</nav>
+<header>
+    <h1>Hackover</h1>
+    {% block page_header %}
+    {% endblock %}
+</header>
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+</body>
+</html>

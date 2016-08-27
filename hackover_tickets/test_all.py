@@ -12,3 +12,7 @@ def test_wearable(wearable, order_relation):
     assert wearable.price == order_relation.wearable.price
     assert wearable.name == order_relation.wearable.name
     assert order_relation.amount > 0
+
+
+def test_redirect_to_register(client):
+    assert 302 == client.get('/').status_code

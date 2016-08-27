@@ -2,3 +2,4 @@ Django==1.10
 pytest==2.9.2
 pytest-factoryboy==1.2.2
 pytest-django==3.0
+django-registration==2.1.2
