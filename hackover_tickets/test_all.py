@@ -1,5 +1,7 @@
 import pytest
+from django.urls import reverse
 from . import models as m
+from django.utils.translation import ugettext as _
 
 
 @pytest.mark.django_db
@@ -21,14 +23,14 @@ def test_redirect_to_register(client):
 
 @pytest.mark.django_db
 def test_order_ticket_form(user_client, ticket_type):
-    response = user_client.get('/tickets/order')
+    response = user_client.get(reverse('ticket_order'))
     assert response.status_code == 200
     assert ticket_type.name in response.content.decode('utf-8')
 
 
 @pytest.mark.django_db
 def test_order_ticket(user_client, user, ticket_type):
-    response = user_client.post('/tickets/order', {'ticket_type': ticket_type.id})
+    response = user_client.post(reverse('ticket_order'), {'ticket_type': ticket_type.id})
     assert ticket_type.name in response.content.decode('utf-8')
     ticket = m.Ticket.objects.get(owner=user)
     assert not ticket.paid
@@ -36,3 +38,14 @@ def test_order_ticket(user_client, user, ticket_type):
     assert ticket.type == ticket_type
     assert ticket.order_id
 
+
+@pytest.mark.django_db
+def test_list_tickets(user_client, user, ticket_factory):
+    tickets = (ticket_factory(owner=user), ticket_factory(owner=user), ticket_factory(owner=user))
+    response = user_client.get(reverse('ticket_list'))
+    content = response.content.decode('utf-8')
+    assert set(tickets) == set(response.context['tickets'])
+    assert all(str(t.order_id) not in content for t in tickets)
+    assert _("unpaid") in content
+    assert _("ticket not accessed") in content
+    assert _("accessed ticket") not in content

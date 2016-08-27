@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <p>{% trans "Your tickets" %}</p>
+    <ul>
+    {% for ticket in tickets %}
+        <li>{{ ticket.type.name }}
+         {{ ticket.paid|yesno:_("paid,unpaid") }}
+         {{ ticket.accessed|yesno:_("accessed ticket,ticket not accessed") }}
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

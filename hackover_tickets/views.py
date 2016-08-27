@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_safe
 from . import models as m
 from .forms import TicketForm
 
@@ -21,3 +22,9 @@ def ticket_order(request):
     return render(request, 'tickets/order.html',
                   context={'form': form})
 
+
+@login_required
+@require_safe
+def ticket_list(request):
+    return render(request, 'tickets/list.html',
+                  context={'tickets': m.Ticket.objects.filter(owner=request.user)})
