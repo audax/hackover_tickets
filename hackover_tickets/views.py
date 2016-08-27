@@ -14,8 +14,8 @@ def ticket_order(request):
     if request.method == 'POST':
         form = TicketForm(request.POST)
         if form.is_valid():
-            m.Ticket.objects.create(type=form.cleaned_data['ticket_type'], owner=request.user)
-            return redirect(reverse('index'))
+            ticket = m.Ticket.objects.create(type=form.cleaned_data['ticket_type'], owner=request.user)
+            return render(request, 'tickets/order_success.html', context={'ticket': ticket})
     else:
         form = TicketForm
     return render(request, 'tickets/order.html',

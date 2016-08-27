@@ -28,7 +28,8 @@ def test_order_ticket_form(user_client, ticket_type):
 
 @pytest.mark.django_db
 def test_order_ticket(user_client, user, ticket_type):
-    user_client.post('/tickets/order', {'ticket_type': ticket_type.id})
+    response = user_client.post('/tickets/order', {'ticket_type': ticket_type.id})
+    assert ticket_type.name in response.content.decode('utf-8')
     ticket = m.Ticket.objects.get(owner=user)
     assert ticket.type == ticket_type
     assert ticket.order_id
