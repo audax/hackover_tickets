@@ -44,7 +44,7 @@ class WearableFactory(DjangoModelFactory):
         model = models.Wearable
 
     name = factory.Faker('catch_phrase')
-    price = factory.Faker('pydecimal')
+    price = factory.Faker('pydecimal', positive=True)
 
 
 @register
