@@ -3,20 +3,20 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Wearable(models.Model):
+class Merchandise(models.Model):
     name = models.TextField()
     price = models.DecimalField(decimal_places=2, max_digits=20)
 
 
-class WearableOrder(models.Model):
+class MerchandiseOrder(models.Model):
     order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(User)
 
 
 class OrderRelation(models.Model):
-    wearable = models.ForeignKey(Wearable)
+    merchandise = models.ForeignKey(Merchandise)
     amount = models.PositiveIntegerField()
-    order = models.ForeignKey(WearableOrder)
+    order = models.ForeignKey(MerchandiseOrder)
 
 
 class TicketType(models.Model):

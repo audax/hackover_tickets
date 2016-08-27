@@ -39,18 +39,18 @@ class UserFactory(DjangoModelFactory):
 
 
 @register
-class WearableFactory(DjangoModelFactory):
+class MerchandiseFactory(DjangoModelFactory):
     class Meta:
-        model = models.Wearable
+        model = models.Merchandise
 
     name = factory.Faker('catch_phrase')
     price = factory.Faker('pydecimal', positive=True)
 
 
 @register
-class WearableOrderFactory(DjangoModelFactory):
+class MerchandiseOrderFactory(DjangoModelFactory):
     class Meta:
-        model = models.WearableOrder
+        model = models.MerchandiseOrder
 
     owner = factory.SubFactory(UserFactory)
 
@@ -61,8 +61,8 @@ class OrderRelationFactory(DjangoModelFactory):
         model = models.OrderRelation
 
     amount = factory.Faker('pyint')
-    wearable = factory.SubFactory(WearableFactory)
-    order = factory.SubFactory(WearableOrderFactory)
+    merchandise = factory.SubFactory(MerchandiseFactory)
+    order = factory.SubFactory(MerchandiseOrderFactory)
 
 
 @pytest.fixture

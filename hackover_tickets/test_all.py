@@ -2,15 +2,15 @@ import pytest
 
 
 @pytest.mark.django_db
-def test_wearable_defaults(wearable):
-    assert wearable.price > 0
-    assert wearable.name
+def test_merchandise_defaults(merchandise):
+    assert merchandise.price > 0
+    assert merchandise.name
 
 
 @pytest.mark.django_db
-def test_wearable(wearable, order_relation):
-    assert wearable.price == order_relation.wearable.price
-    assert wearable.name == order_relation.wearable.name
+def test_merchandise(merchandise, order_relation):
+    assert merchandise.price == order_relation.merchandise.price
+    assert merchandise.name == order_relation.merchandise.name
     assert order_relation.amount > 0
 
 
