@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <p>{% trans "Your merchandise orders" %}</p>
+    <ul>
+        {% for order in orders %}
+            <li>
+                <p>
+                    {{ order.total_price }}
+                    {{ order.paid|yesno:_("paid,unpaid") }}
+                </p>
+                <ol>
+                {% for item in order.items.all %}
+                    <li>
+                    <p>{{ item.merchandise.name }}
+                    {{ item.merchandise.price }} x {{ item.amount }}
+                    </p>
+                    </li>
+                {% endfor %}
+                </ol>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -11,6 +11,10 @@
     <ul>
         <li><a href="http://hackover.de">Hackover</a></li>
         <li><a href="http://hackover.de/faq">FAQ</a></li>
+        <li><a href="{% url 'ticket_order' %}">{% trans "Order ticket" %}</a></li>
+        <li><a href="{% url 'ticket_list' %}">{% trans "List ordered tickets" %}</a></li>
+        <li><a href="{% url 'merch_order' %}">{% trans "Order merchandise" %}</a></li>
+        <li><a href="{% url 'merch_list' %}">{% trans "List ordered merchandise" %}</a></li>
     </ul>
 </nav>
 <header>

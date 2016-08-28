@@ -70,3 +70,14 @@ def test_merchandise_order_price_sum(merchandise_order, merchandise):
     order_relation = m.OrderRelation.objects.create(order=merchandise_order, merchandise=merchandise, amount=2)
     assert set(merchandise_order.items.all()) == {order_relation}
     assert merchandise_order.total_price == order_relation.merchandise.price * order_relation.amount
+
+
+@pytest.mark.django_db
+def test_list_merch_orders(user_client, user, merchandise_order_factory):
+    orders = (merchandise_order_factory(owner=user), merchandise_order_factory(owner=user))
+    response = user_client.get(reverse('merch_list'))
+    content = response.content.decode('utf-8')
+    assert set(orders) == set(response.context['orders'])
+    for order in orders:
+        assert str(order.order_id) not in content
+    assert _("unpaid") in content

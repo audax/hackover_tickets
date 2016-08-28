@@ -52,3 +52,10 @@ def merch_order(request):
                                     initial=[{'merchandise': item} for item in items])
     return render(request, 'merchandise/order.html',
                   context={'form': formset})
+
+
+@login_required
+@require_safe
+def merch_list(request):
+    return render(request, 'merchandise/list.html',
+                  context={'orders': m.MerchandiseOrder.objects.filter(owner=request.user)})
