@@ -11,10 +11,17 @@ class Merchandise(models.Model):
         return "{} - {}".format(self.name, self.price)
 
 
-class MerchandiseOrder(models.Model):
+class AbstractOrder(models.Model):
     order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    owner = models.ForeignKey(User, editable=False)
     paid = models.BooleanField(default=False)
+    accessed = models.BooleanField(default=False)
+    owner = models.ForeignKey(User, editable=False)
+
+    class Meta:
+        abstract = True
+
+
+class MerchandiseOrder(AbstractOrder):
 
     @property
     def total_price(self):
@@ -33,9 +40,5 @@ class TicketType(models.Model):
     public = models.BooleanField()
 
 
-class Ticket(models.Model):
-    order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+class Ticket(AbstractOrder):
     type = models.ForeignKey(TicketType, editable=False)
-    owner = models.ForeignKey(User, editable=False)
-    paid = models.BooleanField(default=False)
-    accessed = models.BooleanField(default=False)
