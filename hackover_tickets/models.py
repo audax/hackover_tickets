@@ -1,6 +1,7 @@
 import uuid
 import qrcode
 from io import BytesIO
+from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -19,7 +20,7 @@ class AbstractOrder(models.Model):
     paid = models.BooleanField(default=False)
     accessed = models.BooleanField(default=False)
     owner = models.ForeignKey(User, editable=False)
-    qrcode = models.ImageField(upload_to='qrcode', blank=True, null=True)
+    qrcode = models.ImageField(upload_to='qrcode', blank=True, null=True, editable=False)
 
     def generate_qrcode(self):
         qr = qrcode.QRCode(
@@ -64,3 +65,6 @@ class TicketType(models.Model):
 
 class Ticket(AbstractOrder):
     type = models.ForeignKey(TicketType, editable=False)
+
+    def get_absolute_url(self):
+        return reverse('ticket_show', kwargs={'order_id': str(self.order_id)})

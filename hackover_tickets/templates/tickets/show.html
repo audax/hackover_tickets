@@ -1,0 +1,9 @@
+{% load i18n %}
+
+{% block content %}
+
+    <p>{% trans "Ticket type" %} {{ ticket.type.name }} </p>
+    <p>{% trans "Username" %} {{ ticket.owner.username }} </p>
+    <img src="{{ qrcode_url }}" alt="{{ ticket.order_id }}" />
+
+{% endblock %}

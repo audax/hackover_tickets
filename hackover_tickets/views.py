@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_safe
 from django.db.transaction import atomic
@@ -59,3 +59,21 @@ def merch_order(request):
 def merch_list(request):
     return render(request, 'merchandise/list.html',
                   context={'orders': m.MerchandiseOrder.objects.filter(owner=request.user)})
+
+
+@login_required
+@require_safe
+def ticket_show(request, order_id):
+    ticket = get_object_or_404(m.Ticket, order_id=order_id)
+    if not ticket.paid:
+        return render(request, 'tickets/not_paid.html',
+                      status=403, context={'ticket': ticket})
+    ticket.accessed = True
+    try:
+        url = ticket.qrcode.url
+    except ValueError:
+        ticket.generate_qrcode()
+        url = ticket.qrcode.url
+    ticket.save()
+    return render(request, 'tickets/show.html',
+                  context={'ticket': ticket, 'qrcode_url': url})

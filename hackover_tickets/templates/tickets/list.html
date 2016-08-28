@@ -9,6 +9,7 @@
         <li>{{ ticket.type.name }}
          {{ ticket.paid|yesno:_("paid,unpaid") }}
          {{ ticket.accessed|yesno:_("accessed ticket,ticket not accessed") }}
+        <a href="{{ ticket.get_absolute_url }}"> {% trans "Access ticket" %} </a>
         </li>
     {% endfor %}
     </ul>

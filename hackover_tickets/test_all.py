@@ -45,7 +45,6 @@ def test_list_tickets(user_client, user, ticket_factory):
     response = user_client.get(reverse('ticket_list'))
     content = response.content.decode('utf-8')
     assert set(tickets) == set(response.context['tickets'])
-    assert all(str(t.order_id) not in content for t in tickets)
     assert _("unpaid") in content
     assert _("ticket not accessed") in content
     assert _("accessed ticket") not in content
@@ -89,3 +88,25 @@ def test_qrcode(ticket):
         assert ticket.qrcode.url
     ticket.generate_qrcode()
     assert ticket.qrcode.url is not None
+
+
+@pytest.mark.django_db
+def test_show_ticket_denied(user_client, ticket):
+    assert not ticket.paid
+    assert not ticket.accessed
+    response = user_client.get(ticket.get_absolute_url())
+    assert response.status_code == 403
+    assert _("unpaid") in response.content.decode('utf-8')
+    assert ticket == response.context['ticket']
+    assert not ticket.accessed
+
+
+@pytest.mark.django_db
+def test_show_ticket(user_client, ticket):
+    ticket.paid = True
+    ticket.save()
+    response = user_client.get(ticket.get_absolute_url())
+    assert response.status_code == 200
+    ticket.refresh_from_db()
+    assert ticket.accessed
+    assert str(ticket.order_id) in response.content.decode('utf-8')
