@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_safe
+from django.db.transaction import atomic
 from . import models as m
 from .forms import TicketForm, MerchOrderFormSet
 
@@ -33,6 +34,21 @@ def ticket_list(request):
 @login_required
 def merch_order(request):
     items = m.Merchandise.objects.all()
-    formset = MerchOrderFormSet(initial=[{'name': item.name, 'price': item.price} for item in items])
+    if request.method == 'POST':
+        formset = MerchOrderFormSet(request.POST, form_kwargs={'items': items})
+        if formset.is_valid():
+            with atomic():
+                order = m.MerchandiseOrder.objects.create(owner=request.user)
+                for entry in formset.cleaned_data:
+                    m.OrderRelation.objects.create(
+                        merchandise=entry['merchandise'],
+                        amount=entry['amount'],
+                        order=order
+                    )
+            return render(request, 'merchandise/created.html',
+                          context={'order': order}, status=201)
+    else:
+        formset = MerchOrderFormSet(form_kwargs={'items': items},
+                                    initial=[{'merchandise': item} for item in items])
     return render(request, 'merchandise/order.html',
                   context={'form': formset})
