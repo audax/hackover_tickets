@@ -81,3 +81,11 @@ def test_list_merch_orders(user_client, user, merchandise_order_factory):
     for order in orders:
         assert str(order.order_id) not in content
     assert _("unpaid") in content
+
+
+@pytest.mark.django_db
+def test_qrcode(ticket):
+    with pytest.raises(ValueError):
+        assert ticket.qrcode.url
+    ticket.generate_qrcode()
+    assert ticket.qrcode.url is not None

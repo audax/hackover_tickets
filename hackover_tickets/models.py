@@ -1,6 +1,9 @@
 import uuid
+import qrcode
+from io import BytesIO
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 class Merchandise(models.Model):
@@ -16,6 +19,25 @@ class AbstractOrder(models.Model):
     paid = models.BooleanField(default=False)
     accessed = models.BooleanField(default=False)
     owner = models.ForeignKey(User, editable=False)
+    qrcode = models.ImageField(upload_to='qrcode', blank=True, null=True)
+
+    def generate_qrcode(self):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=6,
+            border=0,
+        )
+        qr.add_data(str(self.order_id))
+        qr.make(fit=True)
+
+        img = qr.make_image()
+
+        buffer = BytesIO()
+        img.save(buffer)
+        filename = 'order-{}.png'.format(self.order_id)
+        file_buffer = InMemoryUploadedFile(buffer, None, filename, 'image/png', buffer.tell(), None)
+        self.qrcode.save(filename, file_buffer)
 
     class Meta:
         abstract = True
