@@ -110,3 +110,29 @@ def test_show_ticket(user_client, ticket):
     ticket.refresh_from_db()
     assert ticket.accessed
     assert str(ticket.order_id) in response.content.decode('utf-8')
+
+
+@pytest.mark.django_db
+def test_show_order_denied(user_client, order_relation):
+    order = order_relation.order
+    assert not order.paid
+    assert not order.accessed
+    response = user_client.get(order.get_absolute_url())
+    assert response.status_code == 403
+    assert _("unpaid") in response.content.decode('utf-8')
+    assert order == response.context['order']
+    assert not order.accessed
+
+
+@pytest.mark.django_db
+def test_show_order(user_client, order_relation):
+    order = order_relation.order
+    order.paid = True
+    order.save()
+    response = user_client.get(order.get_absolute_url())
+    order.refresh_from_db()
+    assert order.accessed
+    assert order == response.context['order']
+    assert str(order.order_id) in response.content.decode('utf-8')
+
+

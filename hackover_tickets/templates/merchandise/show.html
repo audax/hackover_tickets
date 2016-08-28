@@ -1,0 +1,13 @@
+{% load i18n %}
+
+{% block content %}
+
+    <p>{% trans "Username" %} {{ ticket.owner.username }} </p>
+    {% for item in order.items.all %}
+        <li>{{ item.merchandise }}
+            {{ item.amount }}
+        </li>
+    {% endfor %}
+    <img src="{{ qrcode_url }}" alt="{{ order.order_id }}" />
+
+{% endblock %}

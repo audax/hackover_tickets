@@ -77,3 +77,21 @@ def ticket_show(request, order_id):
     ticket.save()
     return render(request, 'tickets/show.html',
                   context={'ticket': ticket, 'qrcode_url': url})
+
+
+@login_required
+@require_safe
+def merch_show(request, order_id):
+    order = get_object_or_404(m.MerchandiseOrder, order_id=order_id)
+    if not order.paid:
+        return render(request, 'merchandise/not_paid.html',
+                      status=403, context={'order': order})
+    order.accessed = True
+    try:
+        url = order.qrcode.url
+    except ValueError:
+        order.generate_qrcode()
+        url = order.qrcode.url
+    order.save()
+    return render(request, 'merchandise/show.html',
+                  context={'order': order, 'qrcode_url': url})

@@ -46,6 +46,9 @@ class AbstractOrder(models.Model):
 
 class MerchandiseOrder(AbstractOrder):
 
+    def get_absolute_url(self):
+        return reverse('merch_show', kwargs={'order_id': str(self.order_id)})
+
     @property
     def total_price(self):
         return sum(item.amount * item.merchandise.price for item in self.items.all())
