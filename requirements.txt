@@ -5,4 +5,4 @@ pytest-django==3.0
 django-registration==2.1.2
 -e git+https://github.com/karyon/django-webtest.git@django_110#egg=django-webtest
 qrcode==5.3
-Pillow=3.3.1
+Pillow==3.3.1
