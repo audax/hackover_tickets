@@ -10,6 +10,7 @@
                 <p>
                     {{ order.total_price }}
                     {{ order.paid|yesno:_("paid,unpaid") }}
+                    <a href="{{ order.get_absolute_url }}"> {% trans "Access order" %} </a>
                 </p>
                 <ol>
                 {% for item in order.items.all %}
