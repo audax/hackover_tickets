@@ -4,7 +4,8 @@
 {% block content %}
 
     <p>{% trans "Order created" %}</p>
-    {{ order.paid|yesno:_("paid,unpaid") }}
+    <p>{{ order.paid|yesno:_("paid,unpaid") }}</p>
+    <p>{% trans "Total price: " %} {{ order.total_price }} </p>
     <ul>
         {% for item in order.items.all %}
             <li>{{ item.merchandise }}

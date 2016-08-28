@@ -13,14 +13,18 @@ class Merchandise(models.Model):
 
 class MerchandiseOrder(models.Model):
     order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, editable=False)
     paid = models.BooleanField(default=False)
+
+    @property
+    def total_price(self):
+        return sum(item.amount * item.merchandise.price for item in self.items.all())
 
 
 class OrderRelation(models.Model):
-    merchandise = models.ForeignKey(Merchandise)
-    amount = models.PositiveIntegerField()
-    order = models.ForeignKey(MerchandiseOrder, related_name='items')
+    merchandise = models.ForeignKey(Merchandise, editable=False)
+    amount = models.PositiveIntegerField(editable=False)
+    order = models.ForeignKey(MerchandiseOrder, related_name='items', editable=False)
 
 
 class TicketType(models.Model):
@@ -31,7 +35,7 @@ class TicketType(models.Model):
 
 class Ticket(models.Model):
     order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = models.ForeignKey(TicketType)
-    owner = models.ForeignKey(User)
+    type = models.ForeignKey(TicketType, editable=False)
+    owner = models.ForeignKey(User, editable=False)
     paid = models.BooleanField(default=False)
     accessed = models.BooleanField(default=False)

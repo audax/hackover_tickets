@@ -58,3 +58,8 @@ def test_order_merchandise_list(user_client, merchandise_factory):
     content = response.content.decode('utf-8')
     for item in merch:
         assert item.name in content
+
+
+@pytest.mark.django_db
+def test_merchandise_order_price(user, merchandise_order):
+    assert merchandise_order.total_price == 0
