@@ -45,7 +45,7 @@ class MerchandiseFactory(DjangoModelFactory):
         model = models.Merchandise
 
     name = factory.Faker('catch_phrase')
-    price = factory.Faker('pydecimal', positive=True)
+    price = factory.Faker('pydecimal', positive=True, left_digits=2, right_digits=2)
 
 
 @register
@@ -72,7 +72,7 @@ class TicketTypeFactory(DjangoModelFactory):
         model = models.TicketType
 
     name = factory.Faker('catch_phrase')
-    price = factory.Faker('pydecimal', positive=True)
+    price = factory.Faker('pydecimal', positive=True, left_digits=2, right_digits=2)
     public = True
 
 

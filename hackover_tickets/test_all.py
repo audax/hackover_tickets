@@ -61,5 +61,12 @@ def test_order_merchandise_list(user_client, merchandise_factory):
 
 
 @pytest.mark.django_db
-def test_merchandise_order_price(user, merchandise_order):
+def test_merchandise_order_price(merchandise_order):
     assert merchandise_order.total_price == 0
+
+
+@pytest.mark.django_db
+def test_merchandise_order_price_sum(merchandise_order, merchandise):
+    order_relation = m.OrderRelation.objects.create(order=merchandise_order, merchandise=merchandise, amount=2)
+    assert set(merchandise_order.items.all()) == {order_relation}
+    assert merchandise_order.total_price == order_relation.merchandise.price * order_relation.amount
