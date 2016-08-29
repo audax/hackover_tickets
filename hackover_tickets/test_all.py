@@ -77,8 +77,6 @@ def test_list_merch_orders(user_client, user, merchandise_order_factory):
     response = user_client.get(reverse('merch_list'))
     content = response.content.decode('utf-8')
     assert set(orders) == set(response.context['orders'])
-    for order in orders:
-        assert str(order.order_id) not in content
     assert _("unpaid") in content
 
 
